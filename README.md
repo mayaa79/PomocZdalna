@@ -14,7 +14,8 @@ Własna aplikacja do pomocy zdalnej (wzorowana na AnyDesk): technik łączy się
 ```
 
 * `src/Shared` – protokół (komunikaty JSON + klatki binarne JPEG).
-* `src/Server` – serwer pośredniczący (WebSocket). Nie przechowuje haseł; hasło weryfikuje komputer klienta.
+* `src/Relay` – serwer pośredniczący (WebSocket) jako biblioteka. Nie przechowuje haseł; hasło weryfikuje komputer klienta. Aplikacja technika uruchamia go sama w tle (sekcja „Serwer (wbudowany)”, port 5080).
+* `src/Server` – opcjonalny samodzielny serwer (ta sama logika), np. na VPS.
 * `src/App` – aplikacja WPF (.NET 8) pełniąca obie role: „Udostępnij ten komputer” i „Połącz z klientem”.
 
 ## Przepływ połączenia

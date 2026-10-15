@@ -1,10 +1,11 @@
+using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Text;
 using PomocZdalna.Shared;
 
-namespace PomocZdalna.Server;
+namespace PomocZdalna.Relay;
 
 /// <summary>Jedno połączenie WebSocket z bezpiecznym (serializowanym) wysyłaniem.</summary>
 public sealed class Conn

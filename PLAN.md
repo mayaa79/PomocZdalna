@@ -18,11 +18,23 @@ i pozwala wykonywać na nim polecenia – zawsze za zgodą klienta.
 
 ## Struktura
 - `src/Shared` – protokół (komunikaty JSON + binarne klatki JPEG)
-- `src/Server` – relay (RelayHub, blokada brute-force po 5 próbach/10 min, dziennik `logs/sessions-*.log`)
+- `src/Relay` – biblioteka relay: RelayHub (blokada brute-force po 5 próbach/10 min, dziennik sesji `sessions-*.log`),
+  RelayServer (Start/Stop – serwer uruchamiany z poziomu aplikacji), RelayEndpoints (AddRelay/MapRelay)
+- `src/Server` – opcjonalny samodzielny serwer (cienka nakładka na Relay)
 - `src/App` – WPF: MainWindow (host + łączenie + ustawienia), ConsentWindow, ViewerWindow (obraz, mysz, klawiatura,
   konsola); `Host/` (ScreenCapturer GDI, InputInjector SendInput, CommandRunner, HostService), `Core/` (RelayClient, Settings)
 - Ustawienia aplikacji: `%AppData%\PomocZdalna\settings.json` (adres serwera, ID hosta, nazwa technika)
 - Domyślny adres serwera: `ws://localhost:5080/ws`
+
+## Decyzja: serwer wbudowany w aplikację technika (15.10.2026)
+- Ze względów finansowych (projekt hobbystyczny) wariant 1: relay działa w tle w aplikacji na laptopie technika
+  (domyślnie włączony, ustawienia: `EmbeddedServer`, `ServerPort` = 5080; logi w `%AppData%\PomocZdalna\logs`).
+- Klienci łączą się do publicznego adresu laptopa: przekierowanie portu TCP 5080 na routerze + stałe IP lub DDNS;
+  zapora Windows musi zezwolić na ruch przychodzący. Laptop wyłączony = brak usługi.
+- Adres wpisywany domyślnie w aplikacji: stała `Settings.DefaultServerUrl` (zmienić przed zbudowaniem wersji dla klientów).
+- Wariant 2 (osobny VPS 24/7 z TLS) zostaje na później; ten sam kod, `src/Server`.
+- Uwaga: bez TLS (`ws://`) hasło i obraz idą otwartym tekstem – przed użyciem przez internet zrobić `wss://`
+  (np. certyfikat samopodpisany z przypięciem odcisku w kliencie).
 
 ## Stan (15.10.2026)
 - ✅ Serwer zbudowany i przetestowany skryptem (rejestracja, zła hasło, zgoda, relay obrazu/poleceń, blokada, log).
@@ -32,7 +44,7 @@ i pozwala wykonywać na nim polecenia – zawsze za zgodą klienta.
 
 ## Do zrobienia
 1. Pierwszy udany build i test na dwóch komputerach w LAN.
-2. TLS (`wss://`) – reverse proxy lub Kestrel z certyfikatem; przekazywanie IP (ForwardedHeaders).
+2. TLS (`wss://`) – certyfikat samopodpisany z przypięciem w kliencie albo reverse proxy; przekazywanie IP (ForwardedHeaders).
 3. Usługa Windows (SYSTEM): dostęp nienadzorowany, okna UAC, ekran blokady, Ctrl+Alt+Del.
 4. Transfer plików, schowek, czat.
 5. Wiele monitorów, wydajność (kodek wideo H.264 / WebRTC zamiast JPEG), delta klatek.

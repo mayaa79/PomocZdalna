@@ -1,6 +1,10 @@
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Windows;
 using PomocZdalna.App.Core;
 using PomocZdalna.App.Host;
+using PomocZdalna.Relay;
 using PomocZdalna.Shared;
 
 namespace PomocZdalna.App;
@@ -9,12 +13,18 @@ public partial class MainWindow : Window
 {
     private readonly Settings _settings = Settings.Load();
     private readonly HostService _host;
+    private readonly RelayServer _relay = new();
+
+    private static string LogDir => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PomocZdalna", "logs");
 
     public MainWindow()
     {
         InitializeComponent();
         ServerBox.Text = _settings.ServerUrl;
         NameBox.Text = _settings.TechName;
+        EmbeddedCheck.IsChecked = _settings.EmbeddedServer;
+        PortBox.Text = _settings.ServerPort.ToString();
 
         _host = new HostService(_settings);
         _host.AskConsent = AskConsentAsync;
@@ -27,6 +37,75 @@ public partial class MainWindow : Window
             if (name is not null) { WindowState = WindowState.Normal; Activate(); }
         });
         RefreshHostFields();
+        Loaded += async (_, _) => { if (_settings.EmbeddedServer) await StartRelayAsync(); else RefreshServerInfo(); };
+    }
+
+    // ------------------------------------------------------------ SERWER WBUDOWANY
+
+    private async Task StartRelayAsync()
+    {
+        try
+        {
+            await _relay.StartAsync(_settings.ServerPort, LogDir);
+        }
+        catch (Exception ex)
+        {
+            ServerStatus.Text = $"Nie udało się uruchomić serwera na porcie {_settings.ServerPort}: {ex.Message}";
+            AddrInfo.Text = "";
+            return;
+        }
+        RefreshServerInfo();
+    }
+
+    private void RefreshServerInfo()
+    {
+        if (!_relay.IsRunning)
+        {
+            ServerStatus.Text = "Serwer wyłączony";
+            AddrInfo.Text = "";
+            return;
+        }
+
+        ServerStatus.Text = $"Serwer działa na porcie {_relay.Port}";
+        var ips = new List<string>();
+        try
+        {
+            ips = Dns.GetHostAddresses(Dns.GetHostName())
+                .Where(a => a.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(a))
+                .Select(a => $"ws://{a}:{_relay.Port}/ws").ToList();
+        }
+        catch { }
+
+        AddrInfo.Text =
+            "Adres w sieci lokalnej (dla klientów w tej samej sieci): " + (ips.Count > 0 ? string.Join(", ", ips) : "—") +
+            "\nZ internetu: przekieruj port TCP " + _relay.Port + " na routerze do tego laptopa i podaj klientom publiczne IP lub nazwę DDNS. " +
+            "Przy pierwszym uruchomieniu zezwól w Zaporze Windows na dostęp w sieciach prywatnych i publicznych.";
+    }
+
+    private async void EmbeddedCheck_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.EmbeddedServer = EmbeddedCheck.IsChecked == true;
+        SaveSettings();
+        if (_settings.EmbeddedServer) await StartRelayAsync();
+        else { await _relay.StopAsync(); RefreshServerInfo(); }
+    }
+
+    private async void PortBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (!int.TryParse(PortBox.Text, out var port) || port is < 1024 or > 65535)
+        {
+            PortBox.Text = _settings.ServerPort.ToString();
+            return;
+        }
+        if (port == _settings.ServerPort) return;
+
+        _settings.ServerPort = port;
+        SaveSettings();
+        if (_relay.IsRunning)
+        {
+            await _relay.StopAsync();
+            await StartRelayAsync();
+        }
     }
 
     // ------------------------------------------------------------ TRYB KLIENTA (host)
@@ -147,5 +226,6 @@ public partial class MainWindow : Window
             return;
         }
         _host.Stop();
+        Task.Run(() => _relay.StopAsync()).Wait(4000);
     }
 }

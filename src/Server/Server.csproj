@@ -7,6 +7,6 @@
     <AssemblyName>PomocZdalna.Server</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Relay\Relay.csproj" />
   </ItemGroup>
 </Project>

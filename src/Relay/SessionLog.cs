@@ -1,10 +1,12 @@
-namespace PomocZdalna.Server;
+namespace PomocZdalna.Relay;
 
 /// <summary>Prosty dziennik audytowy sesji (plik dzienny w katalogu logs/).</summary>
 public sealed class SessionLog
 {
     private readonly object _gate = new();
-    private readonly string _dir = Path.Combine(AppContext.BaseDirectory, "logs");
+    private readonly string _dir;
+
+    public SessionLog(string dir) => _dir = dir;
 
     public void Write(string line)
     {

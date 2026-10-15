@@ -5,7 +5,18 @@ namespace PomocZdalna.App.Core;
 
 public sealed class Settings
 {
-    public string ServerUrl { get; set; } = "ws://localhost:5080/ws";
+    /// <summary>
+    /// Domyślny adres serwera. Przed zbudowaniem wersji dla klientów zamień na publiczny adres swojego laptopa
+    /// (nazwa DDNS lub IP z przekierowanym portem), np. "ws://moj-laptop.ddns.net:5080/ws".
+    /// </summary>
+    public const string DefaultServerUrl = "ws://localhost:5080/ws";
+
+    public string ServerUrl { get; set; } = DefaultServerUrl;
+
+    /// <summary>Uruchamiaj serwer relay w tle razem z aplikacją (tryb technika).</summary>
+    public bool EmbeddedServer { get; set; } = true;
+
+    public int ServerPort { get; set; } = 5080;
     public string? HostId { get; set; }
     public string TechName { get; set; } = Environment.UserName;
 

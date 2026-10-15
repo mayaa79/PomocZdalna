@@ -51,8 +51,22 @@
 
             <Border Style="{StaticResource Card}">
                 <StackPanel>
+                    <TextBlock Text="Serwer (wbudowany)" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Ten komputer sam pośredniczy w połączeniach – nie trzeba uruchamiać osobnego serwera. Działa, dopóki aplikacja jest włączona." Foreground="#6B7280" Margin="0,4,0,10" TextWrapping="Wrap"/>
+                    <CheckBox x:Name="EmbeddedCheck" Content="Uruchamiaj serwer razem z aplikacją" Click="EmbeddedCheck_Click"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBlock Text="Port:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="PortBox" Width="70" Padding="4" LostFocus="PortBox_LostFocus"/>
+                    </StackPanel>
+                    <TextBlock x:Name="ServerStatus" Margin="0,10,0,0" Foreground="#374151" TextWrapping="Wrap"/>
+                    <TextBox x:Name="AddrInfo" Margin="0,6,0,0" IsReadOnly="True" BorderThickness="0" Background="Transparent" TextWrapping="Wrap" Foreground="#374151"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
                     <TextBlock Text="Ustawienia" FontSize="17" FontWeight="SemiBold"/>
-                    <TextBlock Text="Adres serwera (ws:// lub wss://):" Margin="0,10,0,2"/>
+                    <TextBlock Text="Adres serwera, z którym łączy się ta aplikacja (ws:// lub wss://):" Margin="0,10,0,2"/>
                     <TextBox x:Name="ServerBox" Padding="4" LostFocus="Settings_LostFocus"/>
                     <TextBlock Text="Twoje imię / nazwa technika:" Margin="0,10,0,2"/>
                     <TextBox x:Name="NameBox" Padding="4" LostFocus="Settings_LostFocus"/>
