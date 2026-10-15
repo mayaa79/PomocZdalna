@@ -1,0 +1,39 @@
+<Window x:Class="PomocZdalna.App.ViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pomoc zdalna" Width="1100" Height="760" Background="#111827"
+        PreviewKeyDown="Window_PreviewKeyDown" PreviewKeyUp="Window_PreviewKeyUp"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Background="#1F2937" LastChildFill="False">
+            <CheckBox x:Name="ControlCheck" Content="Steruj zdalnie" Foreground="White" Margin="10" VerticalAlignment="Center"/>
+            <TextBlock x:Name="StatusText" Foreground="#9CA3AF" Margin="8,0" VerticalAlignment="Center"/>
+            <Button DockPanel.Dock="Right" Content="Rozłącz" Margin="8,6" Click="Disconnect_Click"/>
+        </DockPanel>
+
+        <Image Grid.Row="1" x:Name="Screen" Stretch="Uniform" Focusable="True"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               MouseMove="Screen_MouseMove" MouseDown="Screen_MouseDown" MouseUp="Screen_MouseUp" MouseWheel="Screen_MouseWheel"/>
+
+        <Expander Grid.Row="2" x:Name="CmdExpander" Header="Konsola poleceń" Foreground="White" Visibility="Collapsed">
+            <Grid Height="230" Background="#0B1220">
+                <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <TextBox x:Name="CmdOutput" IsReadOnly="True" Background="#0B1220" Foreground="#D1D5DB" BorderThickness="0"
+                         FontFamily="Consolas" FontSize="13" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                <DockPanel Grid.Row="1" Margin="4">
+                    <ComboBox x:Name="ShellBox" DockPanel.Dock="Left" Width="110" SelectedIndex="0" Margin="0,0,6,0">
+                        <ComboBoxItem Content="PowerShell"/>
+                        <ComboBoxItem Content="cmd"/>
+                    </ComboBox>
+                    <TextBox x:Name="CmdInput" FontFamily="Consolas" FontSize="13" Padding="3" KeyDown="CmdInput_KeyDown"/>
+                </DockPanel>
+            </Grid>
+        </Expander>
+    </Grid>
+</Window>

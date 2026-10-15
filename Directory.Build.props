@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- Pozwala budować projekty Windows także na Linux/macOS (CI) -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Company>Marcin Majewski</Company>
+    <Product>Pomoc Zdalna</Product>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+</Project>

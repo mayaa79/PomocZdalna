@@ -1,0 +1,27 @@
+## Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.rsuser
+*.cache
+*.log
+TestResults/
+publish/
+artifacts/
+packages/
+*.nupkg
+.idea/
+*.DotSettings.user
+
+# podglądy HTML z sesji Claude
+Claude outputs/
+
+# wynik budowy instalatora (jeden plik setup.exe)
+build/output/
+
+# lokalne
+logs/
+*.tar.gz

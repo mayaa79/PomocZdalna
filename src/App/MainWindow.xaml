@@ -1,0 +1,63 @@
+<Window x:Class="PomocZdalna.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pomoc Zdalna" Width="500" Height="660" MinWidth="460"
+        WindowStartupLocation="CenterScreen" Background="#F3F4F6" Closing="Window_Closing">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="18">
+
+            <Border x:Name="Banner" Visibility="Collapsed" Background="#DC2626" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Zakończ sesję" Margin="12,0,0,0" Click="EndSession_Click"/>
+                    <TextBlock x:Name="BannerText" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </DockPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Udostępnij ten komputer" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Podaj technikowi ID i hasło. Połączenie wymaga Twojej zgody." Foreground="#6B7280" Margin="0,4,0,12" TextWrapping="Wrap"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                        <TextBlock Text="Twoje ID:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="IdText" Grid.Column="1" IsReadOnly="True" FontSize="22" FontFamily="Consolas" FontWeight="Bold" Text="—" Margin="0,0,0,6"/>
+                        <TextBlock Text="Hasło:" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="PassText" Grid.Row="1" Grid.Column="1" IsReadOnly="True" FontSize="22" FontFamily="Consolas" FontWeight="Bold" Text="—"/>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button x:Name="HostToggle" Content="Włącz udostępnianie" Click="HostToggle_Click"/>
+                        <Button x:Name="NewPassBtn" Content="Nowe hasło" Click="NewPass_Click"/>
+                    </StackPanel>
+                    <TextBlock x:Name="HostStatus" Margin="0,10,0,0" Foreground="#374151" TextWrapping="Wrap" Text="Udostępnianie wyłączone"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Połącz z klientem" FontSize="17" FontWeight="SemiBold"/>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="80"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                        <TextBlock Text="ID klienta:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="ConnId" Grid.Column="1" FontSize="16" Padding="4" Margin="0,0,0,6"/>
+                        <TextBlock Text="Hasło:" Grid.Row="1" VerticalAlignment="Center"/>
+                        <PasswordBox x:Name="ConnPass" Grid.Row="1" Grid.Column="1" FontSize="16" Padding="4"/>
+                    </Grid>
+                    <Button x:Name="ConnectBtn" Content="Połącz" Margin="0,12,0,0" HorizontalAlignment="Left" Click="Connect_Click"/>
+                    <TextBlock x:Name="ConnStatus" Margin="0,10,0,0" Foreground="#374151" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Ustawienia" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Adres serwera (ws:// lub wss://):" Margin="0,10,0,2"/>
+                    <TextBox x:Name="ServerBox" Padding="4" LostFocus="Settings_LostFocus"/>
+                    <TextBlock Text="Twoje imię / nazwa technika:" Margin="0,10,0,2"/>
+                    <TextBox x:Name="NameBox" Padding="4" LostFocus="Settings_LostFocus"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>
